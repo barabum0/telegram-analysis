@@ -1,16 +1,21 @@
 #![allow(clippy::mem_forget)] // False positives from #[wasm_bindgen] macro
 
+#[cfg(target_arch = "wasm32")]
 use eframe::wasm_bindgen::{self, prelude::*};
+#[cfg(target_arch = "wasm32")]
 use eframe::web_sys;
+
 use crate::app::MyApp;
 
 /// Our handle to the web app from JavaScript.
 #[derive(Clone)]
+#[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub struct WebHandle {
     runner: eframe::WebRunner,
 }
 
+#[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 impl WebHandle {
     /// Installs a panic hook, then returns.

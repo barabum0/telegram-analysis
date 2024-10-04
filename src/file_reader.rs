@@ -2,12 +2,15 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::js_sys;
+use log::{info, warn};
 
 #[cfg(target_arch = "wasm32")]
 pub(crate) fn open_file_picker(file_content: Rc<RefCell<String>>) {
     use wasm_bindgen::closure::Closure;
     use wasm_bindgen::JsCast;
     use web_sys::{Event, HtmlInputElement};
+
+    info!("File picker opened");
 
     // Создаем элемент <input type="file">
     let document = web_sys::window().unwrap().document().unwrap();
@@ -51,6 +54,8 @@ async fn read_file(file: web_sys::File, file_content: Rc<RefCell<String>>) {
     use wasm_bindgen::JsCast;
     use wasm_bindgen_futures::JsFuture;
     use web_sys::{Event, FileReader};
+
+    info!("Reading file...");
 
     let reader = FileReader::new().unwrap();
 
