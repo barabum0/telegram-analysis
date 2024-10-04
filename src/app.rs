@@ -32,7 +32,6 @@ impl eframe::App for MyApp {
             if ui.button("Открыть файл").clicked() {
                 #[cfg(target_arch = "wasm32")]
                 {
-                    self.toasts.info("Открываю файл");
                     info!("Вызываю файл");
                     open_file_picker(file_content.clone());
                 }
