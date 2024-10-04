@@ -7,14 +7,14 @@ use log::info;
 use crate::file_reader::open_file_picker;
 
 pub(crate) struct MyApp {
-    file_content: Rc<RefCell<String>>,
+    file_content: Rc<RefCell<Option<String>>>,
     toasts: Toasts,
 }
 
 impl Default for MyApp {
     fn default() -> Self {
         Self {
-            file_content: Rc::new(RefCell::new("".to_string())),
+            file_content: Rc::new(RefCell::new(None)),
             toasts: Toasts::default(),
         }
     }
@@ -45,7 +45,14 @@ impl eframe::App for MyApp {
             ui.separator();
 
             ui.label("Содержимое файла:");
-            ui.code(&*file_content.borrow());
+            let content = &*file_content.borrow();
+
+            if content.is_some() {
+                ui.code(content.clone().unwrap());
+            } else {
+                ui.label("File is not opened.");
+            }
+
         });
     }
 }

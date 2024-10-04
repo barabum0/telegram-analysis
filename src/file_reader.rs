@@ -5,7 +5,7 @@ use wasm_bindgen_futures::js_sys;
 use log::{info, warn};
 
 #[cfg(target_arch = "wasm32")]
-pub(crate) fn open_file_picker(file_content: Rc<RefCell<String>>) {
+pub(crate) fn open_file_picker(file_content: Rc<RefCell<Option<String>>>) {
     use wasm_bindgen::closure::Closure;
     use wasm_bindgen::JsCast;
     use web_sys::{Event, HtmlInputElement};
@@ -49,7 +49,7 @@ pub(crate) fn open_file_picker(file_content: Rc<RefCell<String>>) {
 }
 
 #[cfg(target_arch = "wasm32")]
-async fn read_file(file: web_sys::File, file_content: Rc<RefCell<String>>) {
+async fn read_file(file: web_sys::File, file_content: Rc<RefCell<Option<String>>>) {
     use wasm_bindgen::closure::Closure;
     use wasm_bindgen::JsCast;
     use wasm_bindgen_futures::JsFuture;
@@ -85,5 +85,5 @@ async fn read_file(file: web_sys::File, file_content: Rc<RefCell<String>>) {
     let text = result.as_string().unwrap();
 
     // Сохраняем содержимое файла в состоянии приложения
-    *file_content.borrow_mut() = text;
+    *file_content.borrow_mut() = Some(text);
 }
