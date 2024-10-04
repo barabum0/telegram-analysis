@@ -1,5 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::prelude::*;
+use wasm_bindgen_futures::js_sys;
 
 pub(crate) struct MyApp {
     file_content: Rc<RefCell<String>>,
@@ -56,7 +59,7 @@ fn open_file_picker(file_content: Rc<RefCell<String>>) {
         .dyn_into::<HtmlInputElement>()
         .unwrap();
     input.set_type("file");
-    input.set_accept("text/*"); // Принимаем только текстовые файлы
+    input.set_accept("application/json"); // Принимаем только текстовые файлы
     input.set_multiple(false);   // Разрешить выбор нескольких файлов, если нужно
 
     // Обработчик события изменения (когда пользователь выбирает файл)
@@ -86,26 +89,34 @@ fn open_file_picker(file_content: Rc<RefCell<String>>) {
 
 #[cfg(target_arch = "wasm32")]
 async fn read_file(file: web_sys::File, file_content: Rc<RefCell<String>>) {
-    use futures::channel::oneshot;
     use wasm_bindgen::closure::Closure;
     use wasm_bindgen::JsCast;
-    use web_sys::{FileReader, ProgressEvent};
+    use wasm_bindgen_futures::JsFuture;
+    use web_sys::{Event, FileReader};
 
     let reader = FileReader::new().unwrap();
 
-    let (sender, receiver) = oneshot::channel();
+    let reader_c = reader.clone();
+    let promise = js_sys::Promise::new(&mut |resolve, reject| {
+        let onload = Closure::once(Box::new(move |_event: Event| {
+            resolve.call0(&JsValue::NULL).unwrap();
+        }) as Box<dyn FnMut(_)>);
 
-    let onload = Closure::once(Box::new(move |_event: ProgressEvent| {
-        let _ = sender.send(());
-    }) as Box<dyn FnMut(_)>);
+        let onerror = Closure::once(Box::new(move |_event: Event| {
+            reject.call0(&JsValue::NULL).unwrap();
+        }) as Box<dyn FnMut(_)>);
 
-    reader.set_onloadend(Some(onload.as_ref().unchecked_ref()));
-    onload.forget();
+        reader_c.set_onload(Some(onload.as_ref().unchecked_ref()));
+        onload.forget();
+
+        reader_c.set_onerror(Some(onerror.as_ref().unchecked_ref()));
+        onerror.forget();
+    });
 
     reader.read_as_text(&file).unwrap();
 
     // Ожидаем завершения чтения файла
-    receiver.await.unwrap();
+    JsFuture::from(promise).await.unwrap();
 
     let result = reader.result().unwrap();
     let text = result.as_string().unwrap();
