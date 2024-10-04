@@ -2,6 +2,7 @@
 
 mod app;
 mod web;
+mod file_reader;
 
 use eframe::web_sys;
 // #[cfg(target_arch = "wasm32")]
