@@ -1,5 +1,5 @@
 [package]
-name = "my-egui-web-app"
+name = "telegram-analysis"
 version = "0.1.0"
 authors = ["Roman Poltorabatko <barabum@duck,com>"]
 edition = "2021"

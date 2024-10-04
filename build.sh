@@ -4,7 +4,7 @@
 set -e
 
 # Name of your application (should match the package name in Cargo.toml)
-APP_NAME="my-egui-web-app"
+APP_NAME="telegram-analysis"
 
 # Output directory
 OUTPUT_DIR="dist"
