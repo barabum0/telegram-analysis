@@ -5,6 +5,8 @@ use crate::app::MyApp;
 mod app;
 mod web;
 mod file_reader;
+mod tg_result;
+mod graph;
 
 #[cfg(target_arch = "wasm32")]
 use eframe::web_sys;
