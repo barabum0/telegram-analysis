@@ -69,11 +69,6 @@ impl eframe::App for MyApp {
                     }
                 }
             } else {
-                if ui.button("Close file").clicked() {
-                    self.file_content = Rc::new(RefCell::new(None));
-                    self.export_result = None;
-                    self.graphs = None;
-                }
                 ui.separator();
 
                 ui.label("Messages by days");
