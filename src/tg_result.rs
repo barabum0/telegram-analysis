@@ -65,8 +65,8 @@ impl TgExportMessage {
 
 #[derive(Clone)]
 pub struct Actor {
-    id: u64,
-    name: String,
+    pub id: u64,
+    pub name: String,
 }
 
 impl Actor {
