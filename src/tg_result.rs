@@ -1,3 +1,4 @@
+use std::hash::{Hash, Hasher};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -73,5 +74,17 @@ impl Actor {
             id,
             name,
         }
+    }
+}
+
+impl PartialEq<Self> for Actor {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
+}
+
+impl Hash for Actor {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.id.hash(state)
     }
 }
