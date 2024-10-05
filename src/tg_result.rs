@@ -83,6 +83,10 @@ impl PartialEq<Self> for Actor {
     }
 }
 
+impl Eq for Actor {
+
+}
+
 impl Hash for Actor {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.id.hash(state)
