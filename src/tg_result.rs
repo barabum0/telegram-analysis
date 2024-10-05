@@ -58,6 +58,20 @@ impl TgExportMessage {
     }
 
     pub(crate) fn get_actor(&self) -> String {
-        if self.actor.is_some() {self.actor.clone().unwrap()} else {self.from.clone().unwrap()}
+        if self.actor.is_some() { self.actor.clone().unwrap() } else { self.from.clone().unwrap() }
+    }
+}
+
+pub struct Actor {
+    id: u64,
+    name: String,
+}
+
+impl Actor {
+    pub fn new(id: u64, name: String) -> Self {
+        Self {
+            id,
+            name,
+        }
     }
 }
