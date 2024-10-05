@@ -63,6 +63,7 @@ impl TgExportMessage {
     }
 }
 
+#[derive(Clone)]
 pub struct Actor {
     id: u64,
     name: String,
